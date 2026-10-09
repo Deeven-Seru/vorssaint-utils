@@ -155,6 +155,7 @@ struct NotchNotificationPreviewView: View {
                 NotchIconButton(symbol: "xmark", title: text.dismiss) { service.dismissNotification(notice) }
             }
             .frame(height: NotchNotificationPreviewLayout.headerHeight)
+            ScrollView { VStack(alignment: .leading, spacing: 4) {
             if !content.title.isEmpty {
                 Text(content.title)
                     .font(Font(NotchNotificationPreviewLayout.titleFont as CTFont))
@@ -173,6 +174,7 @@ struct NotchNotificationPreviewView: View {
                     .lineLimit(NotchNotificationPreviewLayout.bodyLines)
                     .textSelection(.enabled)
             }
+            } }
             HStack(spacing: 8) {
                 if let item, notifications.canOpen(item) {
                     Button(text.open) { service.activateNotice(notice) }

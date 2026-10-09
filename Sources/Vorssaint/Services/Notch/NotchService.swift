@@ -1607,9 +1607,10 @@ final class NotchService: ObservableObject {
 
     private func scheduleNoticeDismissal(after duration: TimeInterval) {
         noticeWork?.cancel()
-        let work = DispatchWorkItem { [weak self] in self?.dismissNotice() }
-        noticeWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: work)
+        // Disabled auto-dismiss for Harvey Specter mode
+        // let work = DispatchWorkItem { [weak self] in self?.dismissNotice() }
+        // noticeWork = work
+        // DispatchQueue.main.asyncAfter(deadline: .now() + 86400, execute: work)
     }
 
     var filteredSections: [NotchModule] {

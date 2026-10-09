@@ -1,0 +1,16 @@
+name: Build Vorssaint
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build App
+        run: |
+          ./build.sh
+          # The app should be built in build/stage/Vorssaint.app or build/stage.noindex/Vorssaint.app
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Vorssaint-App
+          path: build/stage/Vorssaint.app

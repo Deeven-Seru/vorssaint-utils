@@ -216,15 +216,15 @@ enum NotchNotificationPreviewLayout {
     static let titleFont = NSFont.systemFont(ofSize: 14, weight: .semibold)
     static let subtitleFont = NSFont.systemFont(ofSize: 13, weight: .medium)
     static let bodyFont = NSFont.systemFont(ofSize: 13)
-    static let titleLines = 2
-    static let subtitleLines = 1
-    static let bodyLines = 6
+    static let titleLines = 999
+    static let subtitleLines = 999
+    static let bodyLines = 999
 
     static func contentHeight(for content: NotchNotificationContent, width: CGFloat) -> CGFloat {
         let blocks = [textHeight(content.title, font: titleFont, lines: titleLines, width: width),
                       textHeight(content.subtitle, font: subtitleFont, lines: subtitleLines, width: width),
                       textHeight(content.body, font: bodyFont, lines: bodyLines, width: width)].filter { $0 > 0 }
-        return headerHeight + (blocks + [actionHeight]).reduce(0) { $0 + spacing + $1 }
+        return min(400, headerHeight + (blocks + [actionHeight]).reduce(0) { $0 + spacing + $1 })
     }
 
     static func textHeight(_ text: String, font: NSFont, lines: Int, width: CGFloat) -> CGFloat {
