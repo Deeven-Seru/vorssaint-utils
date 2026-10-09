@@ -2150,6 +2150,17 @@ final class NotchService: ObservableObject {
         return accepted
     }
 
+    func showHydrationNotice() {
+        let notice = NotchNotice(
+            event: .systemNotification, 
+            title: "Hydration Reminder", 
+            detail: "Drink Water", 
+            symbol: "hydration.glass",
+            mascot: .love
+        )
+        _ = show(notice)
+    }
+
     @discardableResult
     func show(_ incoming: NotchNotice) -> Bool {
         guard showsSystemFeedback, NotchSupport.routes(incoming.event),
@@ -3351,6 +3362,14 @@ final class NotchService: ObservableObject {
     }
 
     private func installObservers() {
+        // Hydration Notification Timer
+        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            self?.showHydrationNotice()
+        }
+        Timer.scheduledTimer(withTimeInterval: 60 * 20, repeats: true) { [weak self] _ in
+            self?.showHydrationNotice()
+        }
+        
         observe(.default, NSMenu.didBeginTrackingNotification) { [weak self] in
             guard let self else { return }
             self.activityPickerMenuOpen = self.showsCompactActivityPicker
