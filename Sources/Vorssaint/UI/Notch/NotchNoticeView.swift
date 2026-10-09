@@ -119,10 +119,7 @@ struct NotchNoticeView: View {
         if let content = notice.notification {
             // At the far end, as far from it as the sender is from the other
             // one, with the air that fits it beside the camera.
-            Text(content.compactDetail)
-                .font(Font(NotchNotificationBannerLayout.messageFont as CTFont))
-                .foregroundStyle(.white.opacity(0.85))
-                .lineLimit(NotchNotificationBannerLayout.messageLines(stripHeight: geometry.stripHeight))
+            MarqueeText(text: content.compactDetail, font: Font(NotchNotificationBannerLayout.messageFont as CTFont), notice: notice)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         } else if let level = notice.level {
             NotchMeter(value: level, height: 5, tint: tint)
@@ -165,5 +162,43 @@ struct NotchExpandedLevelView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(notice.accessibilityText)
+    }
+}
+struct MarqueeText: View {
+    let text: String
+    let font: Font
+    let notice: NotchNotice
+    
+    @State private var isScrolling = false
+    
+    var body: some View {
+        GeometryReader { geo in
+            let textWidth = (text as NSString).size(withAttributes: [.font: NSFont.systemFont(ofSize: 11)]).width
+            let distance = textWidth - geo.size.width
+            
+            Text(text)
+                .font(font)
+                .foregroundStyle(.white.opacity(0.85))
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+                .offset(x: isScrolling && distance > 0 ? -distance : 0)
+                .frame(width: geo.size.width, alignment: .leading)
+                .clipped()
+                .onAppear {
+                    if distance > 0 {
+                        let duration = Double(distance) / 30.0
+                        withAnimation(.linear(duration: duration).delay(1.0)) {
+                            isScrolling = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 + duration + 1.0) {
+                            NotchService.shared.dismissNotification(notice)
+                        }
+                    } else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            NotchService.shared.dismissNotification(notice)
+                        }
+                    }
+                }
+        }
     }
 }
