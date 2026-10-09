@@ -105,9 +105,9 @@ enum NotchMascotVisitFrequency: String, CaseIterable, Identifiable {
     /// How long it waits between visits, in seconds.
     var delay: ClosedRange<TimeInterval> {
         switch self {
-        case .rare: return 600...1200
-        case .normal: return 240...540
-        case .frequent: return 90...180
+        case .rare: return 60...120
+        case .normal: return 15...30
+        case .frequent: return 3...8
         }
     }
 }
