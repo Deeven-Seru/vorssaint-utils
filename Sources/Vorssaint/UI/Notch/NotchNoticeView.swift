@@ -94,6 +94,9 @@ struct NotchNoticeView: View {
                         NotchAgentMark(provider: agent, size: 13)
                     } else if notice.event == .track {
                         NotchTrackArtwork(size: min(18, geometry.stripHeight - 6))
+                    } else if notice.symbol == "hydration.glass" {
+                        WaterGlassView()
+                            .frame(width: 14, height: 18)
                     } else {
                         Image(systemName: notice.symbol)
                             .font(.system(size: 14, weight: .medium))
@@ -153,8 +156,13 @@ struct NotchExpandedLevelView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: notice.symbol)
-                .frame(width: 18)
+            if notice.symbol == "hydration.glass" {
+                WaterGlassView()
+                    .frame(width: 14, height: 18)
+            } else {
+                Image(systemName: notice.symbol)
+                    .frame(width: 18)
+            }
             NotchMeter(value: notice.level ?? 0, height: 5, tint: .white)
                 .frame(maxWidth: 96)
             Text(notice.detail)
